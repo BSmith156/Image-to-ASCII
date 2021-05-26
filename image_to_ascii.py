@@ -1,7 +1,7 @@
-from PIL import Image, UnidentifiedImageError
+from PIL import Image, ImageChops, UnidentifiedImageError
 import sys
 
-usage = "Usage: image_to_ascii.py input_file output_file [-i]\n\t-i: Invert output colour. Useful when output is displayed using a light font and dark background."
+usage = "Usage: image_to_ascii.py input_file output_file [-i]\n\t-i: Invert image colour. Useful when output is displayed using a light font on a dark background."
 gradient = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
 
 # Check command-line arguments
@@ -40,18 +40,20 @@ except FileNotFoundError as e:
     print(f"\nInvalid output file: {outputPath}\n\n{usage}\n")
     quit()
 
+# Convert to greyscale and invert if needed
+image = image.convert("L")
+if invert:
+    image = ImageChops.invert(image)
+
 # Generate output
 output = ""
 width, height = image.size
 for y in range(height):
     for x in range(width):
-        rgb = image.getpixel((x, y))
-        greyscale = (rgb[0] + rgb[1] + rgb[2]) / 3
-        if invert:
-            greyscale = 255 - greyscale
-        output += gradient[round((greyscale / 255) * (len(gradient) - 1))]
+        colour = image.getpixel((x, y))
+        output += gradient[round((colour / 255) * (len(gradient) - 1))]
     output += "\n"
-
 outputFile.write(output)
+
 image.close()
 outputFile.close()
