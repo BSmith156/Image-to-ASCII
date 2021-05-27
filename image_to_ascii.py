@@ -1,7 +1,7 @@
 from PIL import Image, ImageChops, UnidentifiedImageError
 import sys
 
-usage = "Usage: image_to_ascii.py input_file output_file [-i] [-max n]\n\t-i: Invert image colour. Useful when output is displayed using a light font on a dark background.\n\t-max n: Maximum width/height of output (default 100)."
+usage = "Usage: image_to_ascii.py input_file output_file [-i] [-max n]\n\t-i: Invert image colour. Useful when output is displayed using a light font on a dark background.\n\t-max n: Maximum width/height of output, 0 for no maximum (default 100)."
 gradient = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
 
 # Check command-line arguments
@@ -56,7 +56,8 @@ except FileNotFoundError as e:
     quit()
 
 # Resize
-image.thumbnail((maxSize, maxSize))
+if(maxSize > 0):
+    image.thumbnail((maxSize, maxSize))
 
 # Convert to greyscale and invert if needed
 image = image.convert("L")
