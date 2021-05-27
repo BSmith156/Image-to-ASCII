@@ -1,7 +1,7 @@
 from PIL import Image, ImageChops, UnidentifiedImageError
 import sys
 
-usage = "Usage: image_to_ascii.py input_file output_file [-i] [-max n]\n\t-i: Invert image colour. Useful when output is displayed using a light font on a dark background.\n\t-max n: Maximum width/height of output, 0 for no maximum (default 100)."
+usage = "Usage: image_to_ascii.py input_file output_file [-i] [-max n]\n\t-i: Invert image colour. Useful when output is displayed using a light font on a dark background.\n\t-max n: Maximum width/height of output, 0 for no maximum (default 250)."
 gradient = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
 
 # Check command-line arguments
@@ -22,7 +22,7 @@ outputPath = args[2]
 # Optional arguments
 invert = False
 maxSet = False
-maxSize = 100
+maxSize = 250
 
 i = 3
 while(i < argsNum):
@@ -57,7 +57,7 @@ except FileNotFoundError as e:
 
 # Resize
 if(maxSize > 0):
-    image.thumbnail((maxSize, maxSize))
+    image.thumbnail((maxSize / 2, maxSize / 2))
 
 # Convert to greyscale and invert if needed
 image = image.convert("L")
@@ -70,7 +70,7 @@ width, height = image.size
 for y in range(height):
     for x in range(width):
         colour = image.getpixel((x, y))
-        output += gradient[round((colour / 255) * (len(gradient) - 1))]
+        output += gradient[round((colour / 255) * (len(gradient) - 1))] + " "
     output += "\n"
 outputFile.write(output)
 
