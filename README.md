@@ -20,3 +20,6 @@ Convert any image into greyscale ASCII art.
 | output_file | The file to store the ASCII art. |
 | -i | Optional. Inverts the image colour, useful when displaying the output using a light font on a dark background. |
 | -max n | Optional. Sets the maximum width/height of the output to n, 0 for no maximum. Defaults to 250. |
+
+## Authors
+* [Ben Smith](https://github.com/BSmith156)
