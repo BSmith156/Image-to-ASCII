@@ -1,7 +1,7 @@
 from PIL import Image, ImageChops, UnidentifiedImageError
 import sys
 
-usage = "Usage: image_to_ascii.py input_file output_file [-i]\n\t-i: Invert image colour. Useful when output is displayed using a light font on a dark background."
+usage = "Usage: image_to_ascii.py input_file output_file [-i] [-max n]\n\t-i: Invert image colour. Useful when output is displayed using a light font on a dark background.\n\t-max n: Maximum width/height of output (default 100)."
 gradient = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
 
 # Check command-line arguments
@@ -12,19 +12,34 @@ if(argsNum == 1):
     print(f"\n{usage}\n")
     quit()
 
-if(argsNum == 2 or argsNum > 4):
+if(argsNum == 2 or argsNum > 6):
     print(f"\nInvalid number of arguments\n\n{usage}\n")
     quit()
 
 inputPath = args[1]
 outputPath = args[2]
+
+# Optional arguments
 invert = False
-if(argsNum == 4):
-    if(args[3] != "-i"):
-        print(f"\nInvalid argument: {args[3]}\n\n{usage}\n")
-        quit()
-    else:
+maxSet = False
+maxSize = 100
+
+i = 3
+while(i < argsNum):
+    arg = args[i]
+    if(arg == "-i" and not invert):
         invert = True
+        i += 1
+        continue
+    if(arg == "-max" and i != argsNum - 1):
+        arg += " " + args[i + 1]
+        if(not maxSet and args[i + 1].isnumeric()):
+            maxSet = True
+            maxSize = int(args[i + 1])
+            i += 2
+            continue
+    print(f"\nInvalid argument: {arg}\n\n{usage}\n")
+    quit()
 
 # Open input file
 try:
@@ -39,6 +54,9 @@ try:
 except FileNotFoundError as e:
     print(f"\nInvalid output file: {outputPath}\n\n{usage}\n")
     quit()
+
+# Resize
+image.thumbnail((maxSize, maxSize))
 
 # Convert to greyscale and invert if needed
 image = image.convert("L")
