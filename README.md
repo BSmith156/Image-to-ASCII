@@ -1,6 +1,8 @@
 # Image-to-ASCII
 Convert any image into greyscale ASCII art.
 
+<img src="https://imgur.com/ojO31uF.png" width="auto" height="auto">
+
 ## Setup
 ### 1. Clone Repo
 `git clone https://github.com/BSmith156/Image-to-ASCII.git`
