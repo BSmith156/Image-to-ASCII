@@ -1,4 +1,4 @@
-# Image-to-ASCII
+# Image to ASCII
 Convert any image into greyscale ASCII art.
 
 <img src="https://imgur.com/ojO31uF.png" width="auto" height="auto">
