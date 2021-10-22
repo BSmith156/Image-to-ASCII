@@ -1,5 +1,5 @@
 # Image to ASCII
-A command-line program to convert any image into greyscale ASCII art.
+Command-line program to convert any image into greyscale ASCII art.
 
 <img src="https://imgur.com/ojO31uF.png" width="auto" height="auto">
 
