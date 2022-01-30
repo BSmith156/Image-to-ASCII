@@ -1,5 +1,9 @@
-from PIL import Image, ImageChops, UnidentifiedImageError
+import os
 import sys
+import tempfile
+
+import cairosvg
+from PIL import Image, ImageChops, UnidentifiedImageError
 
 usage = "Usage: image_to_ascii.py input_file output_file [-i] [-max n]\n\t-i: Invert image colour. Useful when output is displayed using a light font on a dark background.\n\t-max n: Maximum width/height of output, 0 for no maximum (default 250)."
 gradient = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. "
@@ -41,12 +45,28 @@ while(i < argsNum):
     print(f"\nInvalid argument: {arg}\n\n{usage}\n")
     quit()
 
+
+# Convert unsupported filetype svg to png for PIL.Image.open()
+svg = inputPath.endswith(".svg")
+if svg:
+    tmp_dir = tempfile.TemporaryDirectory()
+    tmp_filename = inputPath[:-4] + ".png"
+    tmp_inputPath = os.path.join(tmp_dir.name, tmp_filename)
+    cairosvg.svg2png(
+        file_obj=open(inputPath, "rb"), write_to=tmp_inputPath)
+    inputPath = tmp_inputPath
+    
+
 # Open input file
 try:
     image = Image.open(inputPath)
 except (FileNotFoundError, UnidentifiedImageError) as e:
     print(f"\nInvalid input file: {inputPath}\n\n{usage}\n")
     quit()
+finally:
+    # If we converted svg, delete temp directory
+    if svg: tmp_dir.cleanup()
+
 
 # Open output file
 try:
